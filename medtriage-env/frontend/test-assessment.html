@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedTriage Assessment Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gradient-to-green { background: linear-gradient(to right, #3b82f6, #10b981); }
+        .gradient-to-blue { background: linear-gradient(to right, #3b82f6, #3b82f6); }
+        .emoji-icon { font-size: 1.5rem; margin-right: 0.5rem; }
+    </style>
+</head>
+<body class="bg-white">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="border-b-2 border-blue-600 bg-white">
+            <div class="max-w-6xl mx-auto px-4 py-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl font-black bg-gradient-to-green bg-clip-text text-transparent">🏥 MedTriage</span>
+                    <h1 class="text-2xl font-bold text-slate-900">Assessment Engine Test</h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 py-8">
+            <!-- Input Section -->
+            <div class="bg-white rounded-2xl border-2 border-blue-200 p-8 shadow-lg mb-8">
+                <h2 class="text-2xl font-bold text-slate-900 mb-6">Test Patient Assessment</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Patient Name</label>
+                        <input type="text" id="patientName" value="John Doe" class="w-full border-2 border-blue-300 rounded-lg px-4 py-2 focus:border-blue-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Age</label>
+                        <input type="number" id="age" value="45" class="w-full border-2 border-blue-300 rounded-lg px-4 py-2 focus:border-blue-600">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-slate-700 mb-3">Symptoms (Check all that apply)</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="symptoms" value="Chest Pain" class="mr-2"> Chest Pain
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="symptoms" value="Shortness of Breath" class="mr-2"> Shortness of Breath
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="symptoms" value="Fever" class="mr-2"> Fever
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="symptoms" value="Cough" class="mr-2"> Cough
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="symptoms" value="Severe Headache" class="mr-2"> Severe Headache
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="symptoms" value="Abdominal Pain" class="mr-2"> Abdominal Pain
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">❤️ Heart Rate (bpm)</label>
+                        <input type="number" id="heartRate" value="80" class="w-full border-2 border-blue-300 rounded-lg px-4 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">🌡️ Temperature (°C)</label>
+                        <input type="number" id="temperature" value="37" step="0.1" class="w-full border-2 border-blue-300 rounded-lg px-4 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">🩸 Blood Pressure</label>
+                        <input type="text" id="bloodPressure" value="120/80" class="w-full border-2 border-blue-300 rounded-lg px-4 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">💨 Respiratory Rate</label>
+                        <input type="number" id="respiratoryRate" value="16" class="w-full border-2 border-blue-300 rounded-lg px-4 py-2">
+                    </div>
+                </div>
+
+                <button onclick="runAssessment()" class="w-full bg-gradient-to-green text-white font-bold py-3 px-6 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all">
+                    Run Assessment
+                </button>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results" class="hidden">
+                <!-- Patient Info -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Left: Patient Card -->
+                    <div class="rounded-2xl bg-white p-6 shadow-lg border-2 border-blue-200">
+                        <h3 class="text-xl font-bold text-transparent bg-gradient-to-green bg-clip-text mb-4">👤 Patient Information</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-xs font-bold text-blue-600">NAME</span>
+                                <p class="font-bold text-lg text-slate-900" id="resultName">-</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-blue-600">AGE & GENDER</span>
+                                <p class="font-semibold text-slate-900" id="resultAge">-</p>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-green-600">SYMPTOMS</span>
+                                <div id="resultSymptoms" class="mt-2 flex flex-wrap gap-2"></div>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold text-green-600">VITAL SIGNS</span>
+                                <div id="resultVitals" class="mt-2 grid grid-cols-2 gap-2"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: ESI Level -->
+                    <div class="lg:col-span-2">
+                        <div id="esiCard" class="rounded-2xl text-white shadow-2xl p-8 border-4 border-white mb-4">
+                            <div class="grid grid-cols-2 gap-6">
+                                <div>
+                                    <p class="text-white/80 text-sm font-bold">🎯 TRIAGE PRIORITY</p>
+                                    <div class="flex items-baseline gap-2">
+                                        <div id="esiLevel" class="text-6xl font-black">-</div>
+                                        <div class="text-xl font-bold">out of 5</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-white/80 text-sm font-bold">🧠 AI CONFIDENCE</p>
+                                    <div class="flex items-baseline justify-end gap-2">
+                                        <div id="confidence" class="text-4xl font-black">-</div>
+                                        <div class="text-xl font-bold">%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-6 border-t border-white/30">
+                                <p class="font-bold text-lg" id="esiDescription">-</p>
+                                <p class="text-white/90 mt-2" id="severity">-</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diagnosis -->
+                <div class="rounded-2xl bg-blue-50 border-2 border-blue-600 p-8 mb-8 shadow-lg">
+                    <h3 class="text-xl font-bold text-transparent bg-gradient-to-green bg-clip-text mb-3">🔬 Preliminary Diagnosis</h3>
+                    <p class="text-blue-900 font-semibold text-lg bg-white rounded-lg p-4 border-l-4 border-blue-600" id="resultDiagnosis">-</p>
+                </div>
+
+                <!-- Recommended Tests -->
+                <div class="rounded-2xl bg-blue-50 border-2 border-blue-500 p-8 mb-8 shadow-lg">
+                    <h3 class="text-xl font-bold text-blue-900 mb-4">🧪 Recommended Tests</h3>
+                    <div id="resultTests" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="rounded-2xl bg-green-50 border-2 border-green-500 p-8 mb-8 shadow-lg">
+                    <h3 class="text-xl font-bold text-green-900 mb-4">💚 Clinical Recommendations</h3>
+                    <div id="resultRecommendations" class="space-y-3"></div>
+                </div>
+
+                <!-- AI Explanation -->
+                <div class="rounded-2xl bg-green-50 border-2 border-green-600 p-8 shadow-lg">
+                    <h3 class="text-xl font-bold text-green-900 mb-3">🤖 AI Analysis</h3>
+                    <div class="bg-white rounded-lg p-4 border-l-4 border-green-600">
+                        <p class="text-slate-700 text-sm leading-relaxed" id="resultExplanation">-</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function runAssessment() {
+            // Get form data
+            const name = document.getElementById('patientName').value;
+            const age = parseInt(document.getElementById('age').value);
+            const symptoms = Array.from(document.querySelectorAll('input[name="symptoms"]:checked')).map(cb => cb.value);
+            const heartRate = parseInt(document.getElementById('heartRate').value);
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            const bloodPressure = document.getElementById('bloodPressure').value;
+            const respiratoryRate = parseInt(document.getElementById('respiratoryRate').value);
+
+            // Calculate ESI Level
+            let esiLevel = 5;
+            if (symptoms.includes('Chest Pain') || heartRate > 120) {
+                esiLevel = 2;
+            } else if (heartRate > 130 || temperature > 40) {
+                esiLevel = 2;
+            } else if (temperature > 39 || symptoms.includes('Severe Headache') || symptoms.includes('Shortness of Breath')) {
+                esiLevel = 3;
+            } else if (symptoms.length > 1) {
+                esiLevel = 3;
+            } else if (symptoms.length === 1) {
+                esiLevel = 4;
+            }
+
+            // Generate Diagnosis
+            let diagnosis = 'Routine assessment';
+            if (symptoms.includes('Chest Pain')) {
+                diagnosis = heartRate > 100 
+                    ? 'Acute Coronary Syndrome (ACS) - possible myocardial infarction'
+                    : 'Acute chest pain - cardiac evaluation required';
+            } else if (symptoms.includes('Shortness of Breath')) {
+                diagnosis = respiratoryRate > 25
+                    ? 'Acute respiratory distress - possible pneumonia or pulmonary embolism'
+                    : 'Dyspnea - respiratory assessment needed';
+            } else if (symptoms.includes('Fever') || temperature > 38) {
+                diagnosis = symptoms.includes('Cough')
+                    ? 'Suspected respiratory infection - possible pneumonia'
+                    : 'Febrile illness - infection workup required';
+            } else if (symptoms.includes('Severe Headache')) {
+                diagnosis = 'Acute headache - neurological evaluation required';
+            } else if (symptoms.includes('Abdominal Pain')) {
+                diagnosis = 'Acute abdominal pain - imaging and labs required';
+            }
+
+            // Generate Tests
+            let tests = [];
+            if (diagnosis.includes('Cardiac') || symptoms.includes('Chest Pain')) {
+                tests = ['⚡ 12-lead ECG', '🧬 Troponin I & T levels', '💉 CBC', '🧪 CMP', '🏥 Chest X-Ray'];
+            } else if (diagnosis.includes('Respiratory') || symptoms.includes('Shortness of Breath')) {
+                tests = ['🫁 Chest X-Ray', '💨 Arterial Blood Gas', '🧬 CBC'];
+            } else if (diagnosis.includes('Infection') || temperature > 38.5) {
+                tests = ['💉 CBC', '🧪 Blood Cultures', '🔬 Urinalysis', '🧬 Metabolic Panel'];
+            }
+
+            // Generate Recommendations
+            let recommendations = [];
+            if (heartRate > 120 || symptoms.includes('Chest Pain')) {
+                recommendations = [
+                    '⚠️ Immediate cardiac monitoring required',
+                    '🏥 Establish IV access for emergency medications',
+                    '👨‍⚕️ Notify physician immediately'
+                ];
+            } else if (symptoms.includes('Shortness of Breath')) {
+                recommendations = [
+                    '💨 Apply oxygen to maintain SpO2 > 94%',
+                    '📡 Continuous pulse oximetry monitoring',
+                    '🫁 Respiratory therapy consultation'
+                ];
+            } else if (temperature > 38.5) {
+                recommendations = [
+                    '💊 Antipyretic medication administration',
+                    '💧 IV hydration and fluid management',
+                    '🧫 Blood culture collection if sepsis suspected'
+                ];
+            } else {
+                recommendations = ['✓ Monitor vital signs', '📝 Document all findings'];
+            }
+
+            // Confidence
+            let confidence = 65 + (symptoms.length > 0 ? 15 : 0) + (heartRate > 0 ? 5 : 0) + (temperature > 0 ? 5 : 0);
+            confidence = Math.min(confidence, 95);
+
+            // Display Results
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultAge').textContent = `${age} years`;
+            
+            const symptomsDiv = document.getElementById('resultSymptoms');
+            symptomsDiv.innerHTML = symptoms.map(s => `<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">${s}</span>`).join('');
+
+            const vitalsDiv = document.getElementById('resultVitals');
+            vitalsDiv.innerHTML = `
+                <div class="bg-blue-100 rounded p-2"><p class="text-xs">❤️ HR</p><p class="font-bold">${heartRate}</p></div>
+                <div class="bg-green-100 rounded p-2"><p class="text-xs">🌡️ Temp</p><p class="font-bold">${temperature}°C</p></div>
+                <div class="bg-blue-100 rounded p-2"><p class="text-xs">🩸 BP</p><p class="font-bold text-xs">${bloodPressure}</p></div>
+                <div class="bg-green-100 rounded p-2"><p class="text-xs">💨 RR</p><p class="font-bold">${respiratoryRate}</p></div>
+            `;
+
+            const esiCard = document.getElementById('esiCard');
+            const colors = {
+                1: 'from-red-500 to-red-600',
+                2: 'from-orange-500 to-orange-600',
+                3: 'from-amber-500 to-amber-600',
+                4: 'from-yellow-500 to-yellow-600',
+                5: 'from-green-500 to-green-600'
+            };
+            esiCard.className = `rounded-2xl text-white shadow-2xl p-8 border-4 border-white mb-4 bg-gradient-to-br ${colors[esiLevel]}`;
+
+            document.getElementById('esiLevel').textContent = esiLevel;
+            document.getElementById('confidence').textContent = confidence;
+            document.getElementById('esiDescription').textContent = ['Critical', 'Emergent', 'Urgent', 'Semi-Urgent', 'Non-Urgent'][esiLevel - 1];
+            document.getElementById('severity').textContent = `ESI Level ${esiLevel}${['Critical', 'Emergent', 'Urgent', 'Semi-Urgent', 'Non-Urgent'][esiLevel - 1]} - Requires priority handling`;
+
+            document.getElementById('resultDiagnosis').textContent = diagnosis;
+
+            const testsDiv = document.getElementById('resultTests');
+            testsDiv.innerHTML = tests.map(t => `<div class="bg-white rounded-lg p-3 border-l-4 border-blue-500"><span>${t}</span></div>`).join('');
+
+            const recsDiv = document.getElementById('resultRecommendations');
+            recsDiv.innerHTML = recommendations.map(r => `<div class="bg-white rounded-lg p-3 border-l-4 border-green-500"><span>${r}</span></div>`).join('');
+
+            const explanation = `Patient ${name} (${age}yo) presents with ${symptoms.length > 0 ? `symptoms: ${symptoms.join(', ')}` : 'routine evaluation'}. Vital Signs: HR ${heartRate} bpm, Temp ${temperature}°C, BP ${bloodPressure}, RR ${respiratoryRate}. Preliminary Assessment: ${diagnosis}. ESI Level: ${esiLevel} - Patient requires priority evaluation and treatment.`;
+            document.getElementById('resultExplanation').textContent = explanation;
+
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Pre-fill with cardiac test case
+        function loadCardiacCase() {
+            document.getElementById('patientName').value = 'John Smith';
+            document.getElementById('age').value = '52';
+            document.getElementById('heartRate').value = '125';
+            document.getElementById('temperature').value = '37.5';
+            document.getElementById('bloodPressure').value = '160/95';
+            document.getElementById('respiratoryRate').value = '22';
+            document.querySelector('input[value="Chest Pain"]').checked = true;
+            runAssessment();
+        }
+
+        // Load cardiac case on page load
+        window.addEventListener('load', loadCardiacCase);
+    </script>
+</body>
+</html>

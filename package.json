@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "dev:backend": "cd tasks && python app.py",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend",
+    "docker:up": "docker-compose up",
+    "docker:build": "docker-compose build",
+    "test:backend": "cd tasks && python -m pytest tests/",
+    "test:frontend": "cd frontend && npm test",
+    "test": "npm run test:backend && npm run test:frontend"
+  }
+}
